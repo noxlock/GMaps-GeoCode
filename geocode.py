@@ -5,82 +5,119 @@ Email:  CSS011905@coderacademy.edu.au
 '''
 
 import googlemaps
+from random import randint
 
 
 GMAPS = googlemaps.Client(key="AIzaSyA4uZQUmMn3gP-5L759AyG0v9j8-gM89vc")
 
 #geocode_result = gmaps.geocode('1600 Amphitheatre Parkway, Mountain View, CA')
 
-'''
-for dict_item in geocode_result:
-for key in dict_item:
-count += 1
-
-print(geocode_result[0]['formatted_address'])
 
 
 
-location format = street # street name, city state
-'''
 
-
-def is_valid_latlong(latitude, longitude):
+def is_greater(lat, longitude):
     '''
-    checks whether input for location() is valid
-    INPUT: latitude, longitude
-    OUTPUT: True or prints error and sends to gmaps_menu()
+    checks if lat, long are greater than 
+    or less than their max, min values
+    INPUT: lat, longitude
+    OUTPUT: return True OR print error
+    '''
+
+    if lat > 90 or lat < -90:
+        print("Error: Latitude ranges from -90 - 90")
+    elif longitude > 180 or longitude < -180:
+        print("Error: Longitude ranges from -180 - 180")
+    else:
+        return True
+
+
+
+
+def is_int(lat, longitude):
+    '''
+    tries to cast lat, longitude to int
+    INPUT: lat, longitude
+    OUTPUT: int(lat), int(longitude) OR return False
     '''
 
     try:
-        if latitude.isdigit() is True and longitude.isdigit() is True:
-            latitude, longitude = int(latitude), int(longitude)
-            # tests ifdigit to prep for int cast
+        lat = int(lat)
+        longitude = int(longitude)
+        return True
+    except ValueError:
+        return False
 
-        if latitude > 90 or longitude > 180:
-            print("""Error! Invalid values, Latitude = 0-90,
-            Longitude = 0-180""")
-            # makes sure you can't do stupid big numbers
-        if latitude < -90 or longitude < -180:
-            print("""Error! Invalid values, Latitude = 0-90,
-            Longitude = 0-180""")
-            #makes sure you can't do stupid tiny numbers
-        else:
-            return True
-            #returns True for the actual function
-    except:
-        print("Error: Invalid Values!")
-        gmaps_menu()
-        # catch for initial isdigit()
 
-def location(latitude, longitude):
+
+
+
+def is_float(lat, longitude):
     '''
-    converts latitude and longitude to location
+    tries to cast lat, longitude to float
+    INPUT: lat, longitude
+    OUTPUT: float(lat), float(longitude) OR return False
+    '''
+
+    try:
+        lat = float(lat)
+        longitude = float(longitude)
+        return True
+    except ValueError:
+        return False
+
+
+
+
+
+def location(lat, longitude):
+    '''
+    does final check, with is_greater
     INPUT: latitude, longitude
-    OUTPUT: location, or error if nothing at coordinates
+    OUTPUT if numbers valid, calls reverse_geo_search
     '''
+
+
+    if is_int(lat, longitude) is True:
+        lat = int(lat)
+        longitude = int(longitude)
+        if is_greater(lat, longitude) is True:
+            reverse_geo_search(lat, longitude)
+        #tries to cast to int, else tries to cast to float
+
+    elif is_float(lat, longitude) is True:
+        lat = float(lat)
+        longitude = float(longitude)
+        if is_greater(lat, longitude) is True:
+            reverse_geo_search(lat, longitude)
+
+    else:
+        print("Error: Invalid values!")
+        #if neither work, print error
+
+
+
+def reverse_geo_search(lat, longitude):
     count = 0
 
-    if is_valid_latlong(latitude, longitude) is True: 
-        # if test returns True, continue with function
-        reverse_geocode_result = GMAPS.reverse_geocode((latitude, longitude))
-        # uses Google API to search coordinates, sets it to a variable
+    reverse_geocode_result = GMAPS.reverse_geocode((lat, longitude))
+    # uses Google API to search coordinates, sets it to a variable
 
-        for dict_item in reverse_geocode_result:
-            for key in dict_item:
-                count = count + 1
-                #iterates the list and dictionary
-
-        if not reverse_geocode_result:
-            print("Sorry, we couldn't find anything there!")
-        else:
-            print(reverse_geocode_result[0]['formatted_address'])
-            # if list empty, print error, else print address
+    for dict_item in reverse_geocode_result:
+        for key in dict_item:
+            count += 1
+            #iterates the list and dictionary
+            if not reverse_geocode_result:
+                print("Sorry, we couldn't find anything there!")
+            else:
+                print(reverse_geocode_result[0]['formatted_address'])
+                quit()
+                # if list empty, print error, else print address 
 
 
 
 
-def is_valid_location(streetnumberstreetname, citystate):
-    pass
+
 
 def latlong():
     count = 0
@@ -96,10 +133,10 @@ def latlong():
 
     for dict_item in geocode_result:
             for key in dict_item:
-                count = count + 1
+                count += 1
                 # iterates list and dictionary
 
-                print(geocode_result[0]['geometry']['location'])
+            print(geocode_result[0]['geometry']['location'])
 
 
 
@@ -121,9 +158,9 @@ def gmaps_menu():
     if choice == "latlong":
         latlong()
     elif choice == "location":
-        latitude = input("Please enter a latitude 0-90\n")
+        lat = input("Please enter a latitude 0-90\n")
         longitude = input("Please enter a longitude 0-180\n")
-        location(latitude, longitude)
+        location(lat, longitude)
     elif choice == "random":
         randomloc()
     elif choice == "exit":

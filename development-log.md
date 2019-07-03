@@ -18,7 +18,7 @@ I plan to make arguments for the amount of quotes the program will use.
 
 
 
-## 29/06/19
+## 28/06/19
 
 ### STATUS UPDATE
 
@@ -36,5 +36,23 @@ Today was mainly fooling around, trying to figure out how the API exports its da
 
 ## 29/06/19
 
-Started writing functions for the program, this included the main menu (gmaps_menu()), lat/longitude to location (location()), and a function to check the supplied lat/longitude is valid. (is_valid_latlong())
+Added menu, error handling, lat/longitude to location, and location to lat/longitude functions.
+
+Fixed IndexError when trying to check if list is empty.
+
+Began work on rewriting error handling, had trouble with casting, managed to get it solved by the end of the day. I hope to fix checking if a value is greater or less than as it's ignoring the check and giving me a HTTP error.
+
+
+
+## 30/06/19
+
+Completely rewrote single error handling function into many, smaller functions to make it easier to pinpoint errors. Fixed is_greater function, it was missing an elif, which caused it to return True if one check passed, but not the other. 
+
+**Latitude to location is now completely functional.**
+
+
+
+
+
+
 
