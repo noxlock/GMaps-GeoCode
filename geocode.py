@@ -4,8 +4,9 @@ Author: Hunter Kemp
 Email:  CSS011905@coderacademy.edu.au
 '''
 
+import random
 import googlemaps
-from random import randint
+
 
 
 GMAPS = googlemaps.Client(key="AIzaSyA4uZQUmMn3gP-5L759AyG0v9j8-gM89vc")
@@ -18,7 +19,7 @@ GMAPS = googlemaps.Client(key="AIzaSyA4uZQUmMn3gP-5L759AyG0v9j8-gM89vc")
 
 def is_greater(lat, longitude):
     '''
-    checks if lat, long are greater than 
+    checks if lat, long are greater than
     or less than their max, min values
     INPUT: lat, longitude
     OUTPUT: return True OR print error
@@ -26,10 +27,12 @@ def is_greater(lat, longitude):
 
     if lat > 90 or lat < -90:
         print("Error: Latitude ranges from -90 - 90")
+        #checks lat isn't crazy high or low
     elif longitude > 180 or longitude < -180:
+        #checks longitude isn't crazy high or low
         print("Error: Longitude ranges from -180 - 180")
-    else:
-        return True
+    return True
+    # if checks pass then return true
 
 
 
@@ -47,7 +50,7 @@ def is_int(lat, longitude):
         return True
     except ValueError:
         return False
-
+    # just tries to cast values to int
 
 
 
@@ -65,6 +68,7 @@ def is_float(lat, longitude):
         return True
     except ValueError:
         return False
+    # just tries to cast values to float
 
 
 
@@ -83,8 +87,9 @@ def location(lat, longitude):
         longitude = int(longitude)
         if is_greater(lat, longitude) is True:
             reverse_geo_search(lat, longitude)
-        #tries to cast to int, else tries to cast to float
+        #tries to cast to int,
 
+        #else tries to cast to float
     elif is_float(lat, longitude) is True:
         lat = float(lat)
         longitude = float(longitude)
@@ -98,6 +103,12 @@ def location(lat, longitude):
 
 
 def reverse_geo_search(lat, longitude):
+    '''
+    converts lat, longitude to formatted address
+    INPUT: lat, longitude
+    OUTPUT: formatted address
+    '''
+
     count = 0
 
     reverse_geocode_result = GMAPS.reverse_geocode((lat, longitude))
@@ -112,7 +123,7 @@ def reverse_geo_search(lat, longitude):
             else:
                 print(reverse_geocode_result[0]['formatted_address'])
                 quit()
-                # if list empty, print error, else print address 
+                # if list empty, print error, else print address
 
 
 
@@ -120,6 +131,12 @@ def reverse_geo_search(lat, longitude):
 
 
 def latlong():
+    '''
+    converts formatted address to lat/longitude
+    INPUT: streetnumberstreetname, citystate
+    OUTPUT: lat, longitude
+    '''
+
     count = 0
     print("Please enter your street number followed by your street name, e.g: ")
     streetnumberstreetname = input("118 Walker Street\n")
@@ -132,12 +149,37 @@ def latlong():
     geocode_result = GMAPS.geocode(streetnumberstreetname + citystate)
 
     for dict_item in geocode_result:
-            for key in dict_item:
-                count += 1
-                # iterates list and dictionary
+        for key in dict_item:
+            count += 1
+            # iterates list and dictionary
 
-            print(geocode_result[0]['geometry']['location'])
+        print(geocode_result[0]['geometry']['location'])
 
+def randomloc():
+    '''
+    generates a random location
+    INPUT: None
+    OUTPUT: formatted address
+    '''
+
+    print("What region would you like to search in?\n")
+    choice = input("[N] None\n[AUS] Australia\n[NZ] New Zealand\n")
+
+    if choice == "AUS":
+        randomlat = random.randint(-42, -12)
+        randomlong = random.randint(113, 151)
+        reverse_geo_search(randomlat, randomlong)
+
+
+    elif choice == "NZ":
+        randomlat = random.randint(-46, -34)
+        randomlong = random.randint(167, 176)
+        reverse_geo_search(randomlat, randomlong)
+
+    else:
+        randomlat = random.randint(-90, 90)
+        randomlong = random.randint(-180, 180)
+        reverse_geo_search(randomlat, randomlong)
 
 
 
