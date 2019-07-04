@@ -1,7 +1,6 @@
 '''
 Program that uses Google's API to perform Geocode operations
-Author: Hunter Kemp
-Email:  CSS011905@coderacademy.edu.au
+Author: noxlock
 '''
 
 import random
