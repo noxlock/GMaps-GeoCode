@@ -1,6 +1,6 @@
 # Geo<>Code
 
-Geo<>Code is a tool that allows users to convert a location into it's latitude and longitude, and vice versa. Geo<>Code also has a random function, which will pick and print the address of a random location.
+Geo<>Code is a tool that allows users to convert a location into it's latitude and longitude, and vice versa. Geo<>Code also has a random function, which will print the address of a random location.
 
 
 
@@ -14,7 +14,9 @@ This command takes a location, and returns a latitude and longitude.
 
 ` latlong`
 
-` (location)`
+` (street number and street name)`
+
+`(city and state)`
 
 
 
@@ -38,6 +40,8 @@ This command generates a random location.
 
 `random`
 
+`(region)`
+
 
 
 The Random Location command also takes an optional argument --region:
@@ -47,6 +51,12 @@ The Random Location command also takes an optional argument --region:
 `random --region AUS`
 
 will only generate a random location within Australia.
+
+
+
+
+
+
 
 
 

@@ -36,6 +36,26 @@ Today was mainly fooling around, trying to figure out how the API exports its da
 
 ## 29/06/19
 
+Completed:
+
+- menu
+
+- error handling
+
+- lat/longitude to location
+
+- location to lat/long
+
+- fixed IndexError
+
+- fixed casting
+
+  
+
+To do:
+
+- checking if value is greater or less than
+
 Added menu, error handling, lat/longitude to location, and location to lat/longitude functions.
 
 Fixed IndexError when trying to check if list is empty.
@@ -46,13 +66,53 @@ Began work on rewriting error handling, had trouble with casting, managed to get
 
 ## 30/06/19
 
+Complete:
+
+- rewrote error handling
+- is_greater (greater or less than check)
+
 Completely rewrote single error handling function into many, smaller functions to make it easier to pinpoint errors. Fixed is_greater function, it was missing an elif, which caused it to return True if one check passed, but not the other. 
 
 **Latitude to location is now completely functional.**
 
 
 
+## 4/07/19
+
+Complete:
+
+- rewrote latlong and reverse_geo_search, now down to ~3 lines
+
+- linted to 10 points
+
+- random function, now works with region.
+
+  
+
+To do:
+
+- lots of documentation
+- args
 
 
 
+## 5/07/19
 
+Complete
+
+- some documentation
+
+- fully working random()
+
+- args
+
+- **program is done**
+
+  
+
+To do:
+
+- lots more documentation
+- readme
+- testing
+- clean up documentation that i've already done

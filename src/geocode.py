@@ -1,17 +1,16 @@
+#!/usr/bin/python3
+
 '''
 Program that uses Google's API to perform Geocode operations
 Author: noxlock
 '''
 
 import random
+import argparse
 import googlemaps
 
 
-
-GMAPS = googlemaps.Client(key="AIzaSyA4uZQUmMn3gP-5L759AyG0v9j8-gM89vc")
-
-#geocode_result = gmaps.geocode('1600 Amphitheatre Parkway, Mountain View, CA')
-
+GMAPS = googlemaps.Client(key="AIzaSyBt6Ma6ubAJ1jkY3JjPFXFJLkBhdStXyQw")
 
 
 
@@ -27,9 +26,11 @@ def is_greater(lat, longitude):
     if lat > 90 or lat < -90:
         print("Error: Latitude ranges from -90 - 90")
         #checks lat isn't crazy high or low
+
     elif longitude > 180 or longitude < -180:
         #checks longitude isn't crazy high or low
         print("Error: Longitude ranges from -180 - 180")
+
     return True
     # if checks pass then return true
 
@@ -85,7 +86,7 @@ def location(lat, longitude):
         lat = int(lat)
         longitude = int(longitude)
         if is_greater(lat, longitude) is True:
-            reverse_geo_search(lat, longitude)
+            return reverse_geo_search(lat, longitude)
         #tries to cast to int,
 
         #else tries to cast to float
@@ -93,95 +94,123 @@ def location(lat, longitude):
         lat = float(lat)
         longitude = float(longitude)
         if is_greater(lat, longitude) is True:
-            reverse_geo_search(lat, longitude)
+            return reverse_geo_search(lat, longitude)
 
-    else:
-        print("Error: Invalid values!")
-        #if neither work, print error
+
+    return None
+
+
 
 
 
 def reverse_geo_search(lat, longitude):
     '''
-    converts lat, longitude to formatted address
+    converts lat/longitude to formatted address
     INPUT: lat, longitude
-    OUTPUT: formatted address
+    OUTPUT: returns formatted addresss, or None
     '''
 
-    count = 0
-
     reverse_geocode_result = GMAPS.reverse_geocode((lat, longitude))
-    # uses Google API to search coordinates, sets it to a variable
-
-    for dict_item in reverse_geocode_result:
-        for key in dict_item:
-            count += 1
-            #iterates the list and dictionary
-            if not reverse_geocode_result:
-                print("Sorry, we couldn't find anything there!")
-            else:
-                print(reverse_geocode_result[0]['formatted_address'])
-                quit()
-                # if list empty, print error, else print address
+    if reverse_geocode_result:
+        return reverse_geocode_result[0]['formatted_address']
+    return None
+    # sets search results to variable, returns it
 
 
 
 
 
-
-def latlong():
+def latlong(streetnumberstreetname, citystate):
     '''
     converts formatted address to lat/longitude
     INPUT: streetnumberstreetname, citystate
     OUTPUT: lat, longitude
     '''
 
-    count = 0
-    print("Please enter your street number followed by your street name, e.g: ")
-    streetnumberstreetname = input("118 Walker Street\n")
-    #asks for street number & name
-
-    print("Please entre your city followed by your state, e.g: ")
-    citystate = input("North Sydney NSW\n")
-    #asks for city and state
 
     geocode_result = GMAPS.geocode(streetnumberstreetname + citystate)
 
-    for dict_item in geocode_result:
-        for key in dict_item:
-            count += 1
-            # iterates list and dictionary
+    if geocode_result:
+        return geocode_result[0]['geometry']['location']
+    return None
+    #sets search results to variable, returns it
 
-        print(geocode_result[0]['geometry']['location'])
 
-def randomloc():
+
+def randomloc(region):
     '''
-    generates a random location
+    generates a random location within a region
+    ARGUMENTS: "AUS", "NZ", "N"
     INPUT: None
     OUTPUT: formatted address
     '''
 
-    print("What region would you like to search in?\n")
-    choice = input("[N] None\n[AUS] Australia\n[NZ] New Zealand\n")
-
-    if choice == "AUS":
+    if region == "AUS":
         randomlat = random.randint(-42, -12)
         randomlong = random.randint(113, 151)
-        reverse_geo_search(randomlat, randomlong)
+        return reverse_geo_search(randomlat, randomlong)
 
 
-    elif choice == "NZ":
+    elif region == "NZ":
         randomlat = random.randint(-46, -34)
         randomlong = random.randint(167, 176)
-        reverse_geo_search(randomlat, randomlong)
+        return reverse_geo_search(randomlat, randomlong)
 
-    else:
+    elif region == "N":
         randomlat = random.randint(-90, 90)
         randomlong = random.randint(-180, 180)
-        reverse_geo_search(randomlat, randomlong)
+        return reverse_geo_search(randomlat, randomlong)
+
+# sets range as latitude longitude range of region, then randoms
+    return None
 
 
+def query(choice):
+    '''
+    takes all user input for menu
+    INPUT: choice = user selection from menu
+    OUTPUT: calls functions, prints errors
+    '''
 
+    if choice == "latlong":
+        print("Please enter your street number followed by your street name, e.g: ")
+        streetnumberstreetname = input("118 Walker Street\n")
+        #asks for street number and name
+
+        print("Please entre your city followed by your state, e.g: ")
+        citystate = input("North Sydney NSW\n")
+        #asks for city and state
+
+        if latlong(streetnumberstreetname, citystate) is None:
+            print("Error, something went wrong, Check the address!")
+            # if returns None, print error, else print the result
+
+        else:
+            print(latlong(streetnumberstreetname, citystate))
+
+    elif choice == "location":
+        lat = input("Please enter a latitude 0-90\n")
+        longitude = input("Please enter a longitude 0-180\n")
+
+        if location(lat, longitude) is None:
+            print("Error, something went wrong, Check your values!")
+
+        else:
+            print(location(lat, longitude))
+
+    elif choice == "random":
+        print("What region would you like to search in?\n")
+        region = input("[N] None\n[AUS] Australia\n[NZ] New Zealand\n")
+        #user selects region to search in
+        if randomloc(region) is None:
+            print("Error, we didn't find anything cool, or the region is invalid.")
+        else:
+            print(randomloc(region))
+
+    elif choice == "exit":
+        quit()
+    else:
+        print("Error: Invalid Selection!")
 
 
 
@@ -190,21 +219,39 @@ def gmaps_menu():
     Prints the menu for GeoCode.py
     '''
 
-    print("- - - - - - - - -\nWhat would you like to do?")
-    print("[latlong] Converts a location to lat/longitude")
-    print("[location] Converts lat/longitude to location.")
-    print("[random] Generates a random location\n[Exit] Stops the program")
-    choice = input("- - - - - - - - -\n")
 
-    if choice == "latlong":
-        latlong()
-    elif choice == "location":
-        lat = input("Please enter a latitude 0-90\n")
-        longitude = input("Please enter a longitude 0-180\n")
-        location(lat, longitude)
-    elif choice == "random":
-        randomloc()
-    elif choice == "exit":
-        quit()
 
-gmaps_menu()
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--latlong", help="Find the lat/longitude of an address. Requires streetnumberstreetname and citystate", action="store_true")
+    parser.add_argument("--location", help="Find the lat/longitude of an address. Requires lat and longitude", action="store_true")
+    parser.add_argument("--random", help="Generates a random location, requires a region argument.", action="store_true")
+    parser.add_argument("-region", help="Sets the region in which to generate a random location for random(). OPTIONS: [AUS] Australia, [NZ] New Zealand, [N] NONE")
+    parser.add_argument("-lat", help="Latitude, ranges from -90 to 90")
+    parser.add_argument("-longitude", help="Longitude, ranges from -180 to 180")
+    parser.add_argument("-streetnumberstreetname", help="Street number and name, e.g 1600 Amphitheatre Parkway. MAKE SURE TO SURROUND THIS IN QUOTES")
+    parser.add_argument("-citystate", help="City and state, e.g Mountain View, California. MAKE SURE TO SURROUND THIS IN QUOTESw")
+    args = parser.parse_args()
+
+    if args.location and args.lat and args.longitude:
+        print(location(args.lat, args.longitude))
+
+    if args.random and args.region:
+        print(randomloc(args.region))
+
+    if args.latlong and args.streetnumberstreetname and args.citystate:
+        print(latlong(args.streetnumberstreetname, args.citystate))
+
+
+    while True:
+        print("- - - - - - - - -\nWhat would you like to do?")
+        print("[latlong] Converts a location to lat/longitude")
+        print("[location] Converts lat/longitude to location.")
+        print("[random] Generates a random location\n[Exit] Stops the program")
+        choice = input("- - - - - - - - -\n")
+        query(choice)
+
+
+
+if __name__ == "__main__":
+    gmaps_menu()
