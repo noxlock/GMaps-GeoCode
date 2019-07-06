@@ -1,17 +1,49 @@
-import argparse
+'''
+Script to test four functions of geocody.py
+tests two conversion functions, 
+and two error handling functions
+Author: noxlock
+'''
 
-if __name__ == "__main__":
+from geocode import latlong, reverse_geo_search, is_int, is_float
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--latlong", help="Find the lat/longitude of an address. Requires streetnumberstreetname and citystate", action="store_true")
-    parser.add_argument("--location", help="Find the lat/longitude of an address. Requires lat and longitude", action="store_true")
-    parser.add_argument("--random", help="Generates a random location, takes an optional region argument", action="store_true")
-    parser.add_argument("--region", help="Sets the region in which to generate a random location for random()")
-    parser.add_argument("--lat", help="Latitude, ranges from -90 to 90")
-    parser.add_argument("--longitude", help="Longitude, ranges from -180 to 180")
+# TEST 1
+
+def test_latlong():
+    '''
+    tests that latlong returns the desired result
+    '''
+
+    assert latlong("1600 Amphitheatre Parkway", "Mountain View, CA 94043, USA") == {'lat': 37.4208484, 'lng': -122.08552}
+    assert latlong("118 Walker St", "North Sydney NSW 2060, Australia") == {'lat': -33.83777070000001, 'lng': 151.2088326}
 
 
-    args = parser.parse_args()
+def test_reverse_geo_search():
+    '''
+    tests that latlong returns the opposite result of latlong
+    '''
 
-if args.location and args.lat and args.longitude:
-    print("les go")
+    assert reverse_geo_search(37.4208484, -122.08552) == "1600 Amphitheatre Pkwy, Mountain View, CA 94043, USA"
+    assert reverse_geo_search(-33.83777070000001, 151.2088326) == "118 Walker St, North Sydney NSW 2060, Australia"
+
+# the two functions above test that geocoding works correctly, and returns the same result if you swap
+# between latlong and reverse_geo_search
+
+# TEST 2
+
+def test_is_int():
+    '''
+    tests that is_int checks values correctly
+    '''
+
+    assert is_int(3, 45) == True
+    assert is_int(3, "$") == False
+
+def test_is_float():
+    '''
+    tests that is_float checks values correctly
+    '''
+    assert is_float(3.1, 33) == True
+    assert is_float("/", 33.3) == False
+
+# the two functions above test that some of the error handling works correctly

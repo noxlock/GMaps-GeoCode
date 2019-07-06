@@ -10,7 +10,7 @@ import argparse
 import googlemaps
 
 
-GMAPS = googlemaps.Client(key="AIzaSyBt6Ma6ubAJ1jkY3JjPFXFJLkBhdStXyQw")
+GMAPS = googlemaps.Client(key="")
 
 
 
@@ -174,11 +174,11 @@ def query(choice):
 
     if choice == "latlong":
         print("Please enter your street number followed by your street name, e.g: ")
-        streetnumberstreetname = input("118 Walker Street\n")
+        streetnumberstreetname = input("118 Walker Street\n- - - - - - - - -\n")
         #asks for street number and name
 
         print("Please entre your city followed by your state, e.g: ")
-        citystate = input("North Sydney NSW\n")
+        citystate = input("North Sydney NSW\n- - - - - - - - -\n")
         #asks for city and state
 
         if latlong(streetnumberstreetname, citystate) is None:
@@ -189,8 +189,8 @@ def query(choice):
             print(latlong(streetnumberstreetname, citystate))
 
     elif choice == "location":
-        lat = input("Please enter a latitude 0-90\n")
-        longitude = input("Please enter a longitude 0-180\n")
+        lat = input("Please enter a latitude -90 to 90\n- - - - - - - - -\n")
+        longitude = input("Please enter a longitude -180 to 180\n- - - - - - - - -\n")
 
         if location(lat, longitude) is None:
             print("Error, something went wrong, Check your values!")
@@ -202,6 +202,7 @@ def query(choice):
         print("What region would you like to search in?\n")
         region = input("[N] None\n[AUS] Australia\n[NZ] New Zealand\n")
         #user selects region to search in
+
         if randomloc(region) is None:
             print("Error, we didn't find anything cool, or the region is invalid.")
         else:
@@ -209,6 +210,7 @@ def query(choice):
 
     elif choice == "exit":
         quit()
+
     else:
         print("Error: Invalid Selection!")
 
@@ -230,7 +232,7 @@ def gmaps_menu():
     parser.add_argument("-lat", help="Latitude, ranges from -90 to 90")
     parser.add_argument("-longitude", help="Longitude, ranges from -180 to 180")
     parser.add_argument("-streetnumberstreetname", help="Street number and name, e.g 1600 Amphitheatre Parkway. MAKE SURE TO SURROUND THIS IN QUOTES")
-    parser.add_argument("-citystate", help="City and state, e.g Mountain View, California. MAKE SURE TO SURROUND THIS IN QUOTESw")
+    parser.add_argument("-citystate", help="City and state, e.g Mountain View, California. MAKE SURE TO SURROUND THIS IN QUOTES")
     args = parser.parse_args()
 
     if args.location and args.lat and args.longitude:
